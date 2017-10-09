@@ -23,7 +23,7 @@ def drawcanvas(sourceimg):
   print(i1.size)
   output = np.zeros((i1.size[0],i1.size[1],3), np.uint8)
   cv.imshow('output', output)
-  output.save("test.jpg")
+  cv.imwrite("test.jpg", output)
   cv.waitKey(0)
 
 def saveimg(outputname):
