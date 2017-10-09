@@ -1,3 +1,4 @@
+import sys
 from itertools import izip
 from PIL import Image
 
@@ -16,7 +17,4 @@ def pxcompare(image1, image2):
   print "Difference (percentage):", (dif / 255.0 * 100) / ncomponents
 
 
-img = "image1.jpg"
-img2 = "image2.jpg"
-
-pxcompare(img, img2)
+pxcompare(sys.argv[1], sys.argv[2])
