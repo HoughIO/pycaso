@@ -1,4 +1,5 @@
 import sys
+import random
 from itertools import izip
 from PIL import Image
 import numpy as np
@@ -23,11 +24,19 @@ def drawcanvas(sourceimg):
   print(i1.size)
   output = np.zeros((i1.size[0],i1.size[1],3), np.uint8)
   cv.imshow('output', output)
-  cv.imwrite("test.jpg", output)
   cv.waitKey(0)
 
-def saveimg(outputname):
-  output.save(outputname)
+def saveimg(imginput, outputname):
+  cv.imwrite(outputname, imginput)
+
+def addshape(imginput, shapetype):
+  #So here I want to be able to pass in the current image
+  #and pass in a type of shape (rectangle, square, etc.)
+  #This should return the updated image
+  size = imginput.size
+  cv.line(imginput,(0,0),(random.randrange(size[0]),random.randrange(size[1])),(random.randrange(256),random.randrange(256),random.randrange(256)),5)
+  saveimg(imginput, "test.jpg")
+  #random.randrange(start, stop)
 
 pxcompare(sys.argv[1], sys.argv[2])
 drawcanvas(sys.argv[1])
