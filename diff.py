@@ -17,11 +17,10 @@ def pxcompare(sourceimg, outputimg):
   else:
       dif = sum(abs(c1-c2) for p1,p2 in pairs for c1,c2 in zip(p1,p2))
   ncomponents = i1.size[0] * i1.size[1] * 3
-  print((dif / 256.0 * 100) / ncomponents)
+  return ((dif / 256.0 * 100) / ncomponents)
 
 def drawcanvas(sourceimg):
   i1 = Image.open(sourceimg)
-  print(i1.size)
   output = np.zeros((i1.size[0],i1.size[1],3), np.uint8)
   return output
   #This code was to render to the screen.
@@ -41,12 +40,16 @@ def addshape(img, shapetype):
   #This should return the updated image
   size = getsourcesize(sys.argv[1])
   if shapetype == "line":
-    cv.line(img,(0,0),(random.randrange(size[0]),random.randrange(size[1])),(random.randrange(256),random.randrange(256),random.randrange(256)),5)
-    #cv.line(img,(0,0),(400,400),(random.randrange(256),random.randrange(256),random.randrange(256)),5)
+    cv.line(img,(random.randrange(size[0]),random.randrange(size[1])),(random.randrange(size[0]),random.randrange(size[1])),(random.randrange(256),random.randrange(256),random.randrange(256)),5)
     cv.imwrite("test.jpg", img)
-  #random.randrange(start, stop)
 
-pxcompare(sys.argv[1], sys.argv[2])
+likeness = pxcompare(sys.argv[1], sys.argv[2])
+print(likeness)
 output = drawcanvas(sys.argv[1])
 addshape(output, "line")
+print(pxcompare(sys.argv[1], sys.argv[2]))
 
+while likeness < 50:
+  addshape(output, "line")
+  likeness = pxcompare(sys.argv[1], sys.argv[2])
+  print likeness
