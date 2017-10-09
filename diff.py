@@ -23,21 +23,30 @@ def drawcanvas(sourceimg):
   i1 = Image.open(sourceimg)
   print(i1.size)
   output = np.zeros((i1.size[0],i1.size[1],3), np.uint8)
-  cv.imshow('output', output)
-  cv.waitKey(0)
+  return output
+  #This code was to render to the screen.
+  #cv.imshow('output', output)
+  #cv.waitKey(0)
 
-def saveimg(imginput, outputname):
+def getsourcesize(sourceimg):
+  i1 = Image.open(sourceimg)
+  return i1.size
+
+def saveimg(outputname, imginput):
   cv.imwrite(outputname, imginput)
 
-def addshape(imginput, shapetype):
+def addshape(img, shapetype):
   #So here I want to be able to pass in the current image
   #and pass in a type of shape (rectangle, square, etc.)
   #This should return the updated image
-  size = imginput.size
-  cv.line(imginput,(0,0),(random.randrange(size[0]),random.randrange(size[1])),(random.randrange(256),random.randrange(256),random.randrange(256)),5)
-  saveimg(imginput, "test.jpg")
+  size = getsourcesize(sys.argv[1])
+  if shapetype == "line":
+    cv.line(img,(0,0),(random.randrange(size[0]),random.randrange(size[1])),(random.randrange(256),random.randrange(256),random.randrange(256)),5)
+    #cv.line(img,(0,0),(400,400),(random.randrange(256),random.randrange(256),random.randrange(256)),5)
+    cv.imwrite("test.jpg", img)
   #random.randrange(start, stop)
 
 pxcompare(sys.argv[1], sys.argv[2])
-drawcanvas(sys.argv[1])
+output = drawcanvas(sys.argv[1])
+addshape(output, "line")
 
