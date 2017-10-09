@@ -40,16 +40,17 @@ def addshape(img, shapetype):
   #This should return the updated image
   size = getsourcesize(sys.argv[1])
   if shapetype == "line":
-    cv.line(img,(random.randrange(size[0]),random.randrange(size[1])),(random.randrange(size[0]),random.randrange(size[1])),(random.randrange(256),random.randrange(256),random.randrange(256)),5)
+    cv.line(img,(random.randrange(size[0]),random.randrange(size[1])),(random.randrange(size[0]),random.randrange(size[1])),(random.randrange(256),random.randrange(256),random.randrange(256)),3)
     cv.imwrite("test.jpg", img)
 
+img = drawcanvas(sys.argv[1])
+saveimg("test.jpg", img)
 likeness = pxcompare(sys.argv[1], sys.argv[2])
 print(likeness)
-output = drawcanvas(sys.argv[1])
-addshape(output, "line")
+addshape(img, "line")
 print(pxcompare(sys.argv[1], sys.argv[2]))
 
 while likeness < 50:
-  addshape(output, "line")
+  addshape(img, "line")
   likeness = pxcompare(sys.argv[1], sys.argv[2])
   print likeness
