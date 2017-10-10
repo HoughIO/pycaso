@@ -2,7 +2,7 @@ import sys
 import random
 from itertools import izip
 from PIL import Image
-import numpy as np
+import numpy as np 
 import cv2 as cv
 
 def pxcompare(sourceimg, outputimg):
@@ -43,14 +43,24 @@ def addshape(img, shapetype):
     cv.line(img,(random.randrange(size[0]),random.randrange(size[1])),(random.randrange(size[0]),random.randrange(size[1])),(random.randrange(256),random.randrange(256),random.randrange(256)),3)
     cv.imwrite("test.jpg", img)
 
+def compareadd(img):
+    imgtry = img
+    addshape(img, "line")
+    likeness = pxcompare(sys.argv[1], sys.argv[2])
+    complikeness = pxcompare(sys.argv[1], sys.argv[2])
+    if complikeness > likeness:
+        print complikeness
+        cv.imwrite("test.jpg", img)
+        return img
+    else:
+        print likeness
+        return imgtry
+
 img = drawcanvas(sys.argv[1])
-saveimg("test.jpg", img)
+cv.imwrite("test.jpg", img)
 likeness = pxcompare(sys.argv[1], sys.argv[2])
 print(likeness)
-addshape(img, "line")
-print(pxcompare(sys.argv[1], sys.argv[2]))
-
-while likeness < 50:
-  addshape(img, "line")
-  likeness = pxcompare(sys.argv[1], sys.argv[2])
-  print likeness
+while likeness < 80:
+    img = compareadd(img)
+    likeness = pxcompare(sys.argv[1], sys.argv[2])
+    print likeness
