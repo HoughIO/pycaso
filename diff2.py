@@ -31,21 +31,26 @@ class DestImg():
         self.imgArray = np.zeros((self.sizex, self.sizey, 3), np.uint8)
         self.imgArrayTest = self.imgArray
         self.imgFile = Image.fromarray(self.imgArray)
-        self.imgTest = Image.fromarray(self.imgArray)
+        self.imgFileTest = Image.fromarray(self.imgArrayTest)
         self.imgData = self.imgFile.getdata()
-        self.imgDataTest = self.imgTest.getdata()
+        self.imgDataTest = self.imgFileTest.getdata()
         self.diff = self.percentageDiff(SourceImg)
 
     def addShape(self, SourceImg, shapetype):
         if shapetype == "line":
-            self.imgArrayTest = cv.line(self.imgArray,(random.randrange(self.sizex),random.randrange(self.sizey)),(random.randrange(self.sizex),random.randrange(self.sizey)),(random.randrange(256),random.randrange(256),random.randrange(256)),1)
-            self.updateImageData()
-            print self.diff
-            if (self.percentageDiff(SourceImg)) > self.diff:
-                self.imgArray = self.imgArrayTest
-                self.diff = self.percentageDiff(SourceImg)
-            else:
-                self.addShape(SourceImg, shapetype)
+          self.addLine(SourceImg)
+
+    def addLine(self, SourceImg):
+        #Adds a line to the test array
+        self.imgArrayTest = cv.line(self.imgArray,(random.randrange(self.sizex),random.randrange(self.sizey)),(random.randrange(self.sizex),random.randrange(self.sizey)),(random.randrange(256),random.randrange(256),random.randrange(256)),1)
+        #Creates an image file in memory from the test array
+        self.updateImageData()
+        if (self.percentageDiff(SourceImg)) > self.diff:
+            self.imgArray = self.imgArrayTest
+            self.diff = self.percentageDiff(SourceImg)
+        else:
+          self.imgArrayTest = self.imgArray
+          self.updateImageData()
 
     def save(self):
         cv.imwrite(sys.argv[2], self.imgArray)
@@ -53,9 +58,8 @@ class DestImg():
           self.imgData = self.imgFile.getdata()
 
     def updateImageData(self):
-      self.imgTest = Image.fromarray(self.imgArrayTest)
-      self.imgDataTest = self.imgTest.getdata()
-
+      self.imgFileTest = Image.fromarray(self.imgArrayTest)
+      self.imgDataTest = self.imgFileTest.getdata()
 
     def percentageDiff(self, SourceImg):
         #return np.mean( a != b )
@@ -79,12 +83,10 @@ test = DestImg(source)
 print "test.sizex: ", test.sizex
 print "test.sizey: ", test.sizey
 
-print "TEST:"
-print test.diff
-
 count = 0
 while test.diff < 90.0:
     test.addShape(source, "line")
+    print "Start: ", test.diff," Current: ", test.percentageDiff(source), '\r',
     count += 1
     if count % 10 == 0:
         test.save()
