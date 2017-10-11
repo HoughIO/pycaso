@@ -43,10 +43,9 @@ class DestImg():
         self.diff = self.percentageDiff(SourceImg)
 
     def addShape(self, SourceImg, shapetype):
-        trial = self.imgArray
         if shapetype == "line":
-            trial = cv.line(trial,(random.randrange(self.sizex),random.randrange(self.sizey)),(random.randrange(self.sizex),random.randrange(self.sizey)),(random.randrange(256),random.randrange(256),random.randrange(256)),3)
-            self.save
+            self.imgArray = cv.line(self.imgArray,(random.randrange(self.sizex),random.randrange(self.sizey)),(random.randrange(self.sizex),random.randrange(self.sizey)),(random.randrange(256),random.randrange(256),random.randrange(256)),5)
+            self.save()
             print self.percentageDiff(SourceImg)
             print self.diff
             print
@@ -87,22 +86,19 @@ print( "source.sizex: ", source.sizex )
 print( "source.sizey: ", source.sizey )
 
 test = DestImg(source)
-print( "test.sizex: ", test.sizex )
-print( "test.sizey: ", test.sizey )
+print "test.sizex: ", test.sizex
+print "test.sizey: ", test.sizey
 
 print "TEST:"
 print test.diff
 
-print test.diff
-test.addShape(source, "line")
 count = 0
-while test.diff > 90:
-    test.addShape("line")
-    print(test.diff)
+while test.diff < 90:
+    test.addShape(source, "line")
     count += 1
     if count % 50 == 0:
         test.save()
 
 
 
-test.save
+test.save()
