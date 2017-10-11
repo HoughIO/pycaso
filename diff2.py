@@ -18,13 +18,6 @@ class SourceImg():
         self.sizex = self.imgFile.size[0]
         self.sizey =self.imgFile.size[1]
         self.imgArray = np.asarray(self.imgFile)
-        self.grayArray = self.calcGrayscale()
-
-    def calcGrayscale(self):
-      if len(self.imgArray.shape) == 3:
-        return average(self.imgArray, -1)
-      else:
-        return imgArray
 
 class DestImg():
     """ An attempt to model an image """
@@ -36,40 +29,37 @@ class DestImg():
         self.sizex = SourceImg.sizex
         self.sizey = SourceImg.sizey
         self.imgArray = np.zeros((self.sizex, self.sizey, 3), np.uint8)
-        self.grayArray = self.calcGrayscale()
-        self.save()
-        self.imgFile = Image.open(sys.argv[2])
+        self.imgArrayTest = self.imgArray
+        self.imgFile = Image.fromarray(self.imgArray)
+        self.imgTest = Image.fromarray(self.imgArray)
         self.imgData = self.imgFile.getdata()
+        self.imgDataTest = self.imgTest.getdata()
         self.diff = self.percentageDiff(SourceImg)
 
     def addShape(self, SourceImg, shapetype):
         if shapetype == "line":
-            self.imgArray = cv.line(self.imgArray,(random.randrange(self.sizex),random.randrange(self.sizey)),(random.randrange(self.sizex),random.randrange(self.sizey)),(random.randrange(256),random.randrange(256),random.randrange(256)),5)
-            self.save()
-            print self.percentageDiff(SourceImg)
+            self.imgArrayTest = cv.line(self.imgArray,(random.randrange(self.sizex),random.randrange(self.sizey)),(random.randrange(self.sizex),random.randrange(self.sizey)),(random.randrange(256),random.randrange(256),random.randrange(256)),1)
+            self.updateImageData()
             print self.diff
-            print
-            if (self.percentageDiff(SourceImg)) < self.diff:
-                self1.imgArray = trial
+            if (self.percentageDiff(SourceImg)) > self.diff:
+                self.imgArray = self.imgArrayTest
+                self.diff = self.percentageDiff(SourceImg)
             else:
                 self.addShape(SourceImg, shapetype)
-
-
-    def calcGrayscale(self):
-      if len(self.imgArray.shape) == 3:
-        return average(self.imgArray, -1)
-      else:
-        return imgArray
 
     def save(self):
         cv.imwrite(sys.argv[2], self.imgArray)
         if hasattr(self, 'imgFile'):
           self.imgData = self.imgFile.getdata()
 
+    def updateImageData(self):
+      self.imgTest = Image.fromarray(self.imgArrayTest)
+      self.imgDataTest = self.imgTest.getdata()
+
 
     def percentageDiff(self, SourceImg):
         #return np.mean( a != b )
-        pairs = izip(SourceImg.imgData, self.imgData)
+        pairs = izip(SourceImg.imgData, self.imgDataTest)
         if len(SourceImg.imgFile.getbands()) == 1:
           # for gray-scale jpegs
           dif = sum(abs(p1-p2) for p1,p2 in pairs)
@@ -93,10 +83,10 @@ print "TEST:"
 print test.diff
 
 count = 0
-while test.diff < 90:
+while test.diff < 90.0:
     test.addShape(source, "line")
     count += 1
-    if count % 50 == 0:
+    if count % 10 == 0:
         test.save()
 
 
