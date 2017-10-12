@@ -40,7 +40,7 @@ class DestImg():
 
   def addLine(self, SourceImg):
     #Adds a line to the test array
-    self.imgArrayTest = cv.line(self.imgArrayTest,(random.randrange(self.sizex),random.randrange(self.sizey)),(random.randrange(self.sizex),random.randrange(self.sizey)),(random.randrange(256),random.randrange(256),random.randrange(256)),1)
+    self.imgArrayTest = cv.line(self.imgArray,(random.randrange(self.sizex),random.randrange(self.sizey)),(random.randrange(self.sizex),random.randrange(self.sizey)),(random.randrange(256),random.randrange(256),random.randrange(256)),1)
     #Creates an image file in memory from the test array
     self.updateImageData()
     if (self.percentageDiff(SourceImg)) > self.diff:
